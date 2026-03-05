@@ -13,7 +13,7 @@ O site já está preparado para gerar PIX no mesmo domínio. Só falta configura
 
 ## 2. Onde configurar
 
-Como o site está no **mesmo domínio** (ex.: testadomed.com.br), a API fica em `https://testadomed.com.br/api/create-payment`. As keys **não** ficam no site; ficam só no servidor (variáveis de ambiente).
+Como o site está no **mesmo domínio** (ex.: www.atestadomed.com.br), a API fica em `https://www.atestadomed.com.br/api/create-payment`. As keys **não** ficam no site; ficam só no servidor (variáveis de ambiente).
 
 ### Na Vercel
 
@@ -25,7 +25,7 @@ Como o site está no **mesmo domínio** (ex.: testadomed.com.br), a API fica em 
 |------|--------|----------|
 | `FUSIONPAY_PUBLIC_KEY` | Cole a Public Key do Fusion Pay | Production (e Preview se quiser) |
 | `FUSIONPAY_SECRET_KEY` | Cole a Secret Key do Fusion Pay | Production (e Preview) |
-| `APP_URL` | URL do seu site, ex.: `https://testadomed.com.br` (sem barra no final) | Production (e Preview) |
+| `APP_URL` | URL do seu site, ex.: `https://www.atestadomed.com.br` (sem barra no final) | Production (e Preview) |
 
 4. Salve e faça um **Redeploy** do projeto.
 
@@ -33,7 +33,7 @@ Como o site está no **mesmo domínio** (ex.: testadomed.com.br), a API fica em 
 
 ## 3. Conferir
 
-- Abra o site no domínio (ex.: testadomed.com.br).
+- Abra o site no domínio (ex.: www.atestadomed.com.br).
 - Vá em **Solicitar Atestado**, preencha e clique em **Continuar para pagamento**.
 - Deve abrir a tela de PIX (redirect ou QR na página). Se aparecer “Não foi possível abrir a tela de pagamento”, confira se as 3 variáveis estão corretas e se fez o redeploy.
 

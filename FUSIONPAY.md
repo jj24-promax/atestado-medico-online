@@ -8,12 +8,12 @@ O pagamento PIX é gerado **no próprio site**: o formulário chama a API no mes
 
 1. No **painel Fusion Pay** → **Credenciais API**, copie a **Public Key** e a **Secret Key**.
 
-2. **Na Vercel** (projeto do seu site, ex.: testadomed.com.br):
+2. **Na Vercel** (projeto do seu site, ex.: www.atestadomed.com.br):
    - **Settings** → **Environment Variables**
    - Crie:
      - `FUSIONPAY_PUBLIC_KEY` = sua Public Key
      - `FUSIONPAY_SECRET_KEY` = sua Secret Key
-     - `APP_URL` = URL do site (ex.: `https://testadomed.com.br`) — usada para o webhook
+     - `APP_URL` = URL do site (ex.: `https://www.atestadomed.com.br`) — usada para o webhook
 
 3. Faça um **novo deploy** para as variáveis valerem.
 
@@ -35,6 +35,9 @@ O pagamento PIX é gerado **no próprio site**: o formulário chama a API no mes
 |--------|--------|
 | `api/create-payment.js` | Cria a transação PIX na Fusion Pay (chamado pelo formulário). |
 | `api/webhooks/fusionpay.js` | Recebe a notificação de pagamento da Fusion Pay. |
+| `api/refund.js` | Estorna uma transação. POST com body `{ "transactionId": "id" }`. |
+| `api/transfer.js` | Cria saque/transferência para chave PIX. POST com `pix_key`, `pix_type` (cpf/cnpj/evp/phone/email), `amount` (reais), `postback_url` (opcional). |
+| `api/balance.js` | Consulta saldo da carteira. GET; resposta em `data.amount` (saldo em centavos). |
 | `config-api.js` | `API_BASE_URL` vazio = usa o próprio domínio. |
 | `solicitar.html` + `script.js` | Formulário que envia para `/api/create-payment`. |
 

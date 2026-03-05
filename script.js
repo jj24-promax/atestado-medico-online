@@ -304,17 +304,27 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
       body: JSON.stringify(paymentPayload)
     })
       .then(function (payRes) {
-        return payRes.json().then(function (payData) {
+        return payRes.text().then(function (text) {
+          var payData = null;
+          try {
+            payData = text ? JSON.parse(text) : null;
+          } catch (e) {
+            if (payRes.status === 404) {
+              return { showPix: false, error: 'A rota de pagamento não foi encontrada (404). Confira se o deploy na Vercel inclui a pasta "api" e se o domínio está correto (www.atestadomed.com.br).' };
+            }
+            return { showPix: false, error: 'A API retornou uma resposta inválida. Verifique se o projeto está deployado com a pasta api/ e as variáveis FUSIONPAY na Vercel.' };
+          }
           if (payRes.ok && payData) {
             var url = payData.pix && payData.pix.url ? payData.pix.url : (payData.checkout_url || payData.url);
             if (url) return { redirect: true, url: url };
             if (payData.pix && (payData.pix.qr_code || payData.pix.e2_e)) return { showPix: true, pix: payData.pix };
           }
-          throw new Error(payData && payData.error ? payData.error : 'Pagamento não disponível');
+          var msg = (payData && payData.error) ? payData.error : 'Pagamento não disponível. Configure na Vercel: FUSIONPAY_PUBLIC_KEY, FUSIONPAY_SECRET_KEY e APP_URL.';
+          return { showPix: false, error: msg };
         });
       })
-      .catch(function () {
-        return { showPix: false };
+      .catch(function (err) {
+        return { showPix: false, error: (err && err.message) ? err.message : 'Não foi possível conectar à API. Verifique sua conexão e se o site está em www.atestadomed.com.br.' };
       })
       .then(function (result) {
         if (result.redirect && result.url) {
@@ -365,12 +375,24 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
         }
         var aviso = document.getElementById('solicitar-pagamento-aviso');
         if (aviso) {
+          var p = aviso.querySelector('p');
+          if (p) {
+            var msg = (result && result.error) ? result.error : 'Configure na Vercel (Settings → Environment Variables): FUSIONPAY_PUBLIC_KEY, FUSIONPAY_SECRET_KEY e APP_URL. Depois faça um novo deploy.';
+            p.textContent = msg;
+          }
           aviso.removeAttribute('hidden');
           aviso.setAttribute('aria-live', 'polite');
         }
       })
-      .catch(function () {
-        alert('Não foi possível conectar ao pagamento. Verifique sua conexão ou tente novamente.');
+      .catch(function (err) {
+        var aviso = document.getElementById('solicitar-pagamento-aviso');
+        if (aviso) {
+          var p = aviso.querySelector('p');
+          if (p) p.textContent = (err && err.message) ? err.message : 'Não foi possível conectar ao pagamento. Tente novamente.';
+          aviso.removeAttribute('hidden');
+        } else {
+          alert(err && err.message ? err.message : 'Não foi possível conectar ao pagamento. Tente novamente.');
+        }
       })
       .finally(function () {
         if (btn) {

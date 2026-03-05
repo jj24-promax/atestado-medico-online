@@ -102,14 +102,22 @@ module.exports = async function handler(req, res) {
     const data = await fusionRes.json().catch(() => ({}));
 
     if (!fusionRes.ok) {
+      const errMsg =
+        data?.message ||
+        data?.error ||
+        (Array.isArray(data?.errors) && data.errors[0]?.message) ||
+        (typeof data?.errors === "object" && data.errors && Object.values(data.errors)[0]) ||
+        "Erro ao criar pagamento. Verifique as credenciais e os dados enviados.";
       return res.status(fusionRes.status).json({
-        error: data?.message || data?.error || "Erro ao criar pagamento",
+        error: errMsg,
         details: data,
       });
     }
 
-    const transactionId = data?.id ?? data?.data?.[0]?.id;
-    const pix = data?.pix?.[0] ?? data?.data?.[0]?.pix?.[0] ?? {};
+    const first = data?.data?.[0] ?? data;
+    const transactionId = first?.id ?? data?.id;
+    const pixList = first?.pix ?? data?.pix;
+    const pix = Array.isArray(pixList) ? pixList[0] : pixList ?? {};
 
     return res.status(200).json({
       transactionId,

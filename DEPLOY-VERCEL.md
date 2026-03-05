@@ -12,13 +12,13 @@ O projeto é um **site estático** (HTML, CSS, JS) com **duas funções serverle
 4. Em **Settings** → **Environment Variables**, configure:
    - `FUSIONPAY_PUBLIC_KEY`
    - `FUSIONPAY_SECRET_KEY`
-   - `APP_URL` = URL do site (ex.: `https://testadomed.com.br`)
-5. Faça o deploy. O site e a API ficam no **mesmo domínio** (ex.: `https://testadomed.com.br` e `https://testadomed.com.br/api/create-payment`).
+   - `APP_URL` = URL do site (ex.: `https://www.atestadomed.com.br`)
+5. Faça o deploy. O site e a API ficam no **mesmo domínio** (ex.: `https://www.atestadomed.com.br` e `https://www.atestadomed.com.br/api/create-payment`).
 
 ---
 
 ## Domínio próprio
 
-Em **Settings** → **Domains**, adicione o domínio que você comprou (ex.: testadomed.com.br). A Vercel orienta o que configurar no DNS.
+Em **Settings** → **Domains**, adicione o domínio que você comprou (ex.: www.atestadomed.com.br). A Vercel orienta o que configurar no DNS.
 
 Depois de publicar, defina **`APP_URL`** com essa mesma URL (para o webhook da Fusion Pay).
