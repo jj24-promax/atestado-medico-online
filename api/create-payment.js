@@ -116,19 +116,33 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const first = data?.data?.[0] ?? data;
+    const first = data?.data?.[0] ?? data?.data ?? data;
     const transactionId = first?.id ?? data?.id;
     const pixList = first?.pix ?? data?.pix;
-    const pix = Array.isArray(pixList) ? pixList[0] : pixList ?? {};
+    const pixRaw = Array.isArray(pixList) ? pixList[0] : pixList ?? {};
+    // Várias formas que a API pode retornar (snake_case, PascalCase, camelCase)
+    const qrCode =
+      pixRaw.qr_code ?? pixRaw.QrCode ?? pixRaw.qrCode ?? pixRaw.qr_code_base64 ?? pixRaw.QrCodeBase64 ?? null;
+    const url = pixRaw.url ?? pixRaw.Url ?? pixRaw.payment_url ?? pixRaw.PaymentUrl ?? null;
+    const e2e =
+      pixRaw.e2_e ?? pixRaw.E2E ?? pixRaw.e2e ?? pixRaw.qr_code ?? pixRaw.copy_paste ?? pixRaw.copia_cola ?? null;
 
-    return res.status(200).json({
+    const pix = { qr_code: qrCode, url, e2_e: e2e };
+    const allNull = !qrCode && !url && !e2e;
+    const body = {
       transactionId,
-      pix: {
-        qr_code: pix.qr_code ?? null,
-        url: pix.url ?? null,
-        e2_e: pix.e2_e ?? null,
-      },
-    });
+      pix,
+      ...(allNull &&
+        data && {
+          _debug: {
+            dataKeys: data ? Object.keys(data) : [],
+            firstKeys: first && typeof first === "object" ? Object.keys(first) : [],
+            pixRawKeys: pixRaw && typeof pixRaw === "object" ? Object.keys(pixRaw) : [],
+            raw: data,
+          },
+        }),
+    };
+    return res.status(200).json(body);
   } catch (e) {
     return res.status(500).json({ error: "Erro ao criar transação de pagamento" });
   }
