@@ -18,15 +18,17 @@
 </head>
 <body>
   <h1>Testar geração de QR code PIX</h1>
-  <p>Esta página chama <strong>/api/create-payment</strong> e exibe o resultado (redirect, QR ou erro).</p>
-  <p>Use no mesmo domínio do site (ex.: <code>https://www.atestadomed.com.br/testar-pagamento.html</code> ou <code>http://localhost:3002/testar-pagamento.html</code>).</p>
+  <p>Esta página chama a API de pagamento e exibe o resultado (redirect, QR ou erro).</p>
+  <p>Use no mesmo domínio do site (ex.: <code>https://www.atestadomed.com.br/testar-pagamento.html</code>).</p>
   <button type="button" id="btn">Gerar pagamento de teste (R$ 39,90)</button>
   <div id="resultado"></div>
 
+  <script src="config-api.js"></script>
   <script>
     (function () {
       var base = window.location.origin;
-      var apiUrl = base.replace(/\/$/, '') + '/api/create-payment';
+      var path = (typeof window.PAYMENT_API_PATH !== 'undefined' && window.PAYMENT_API_PATH) ? window.PAYMENT_API_PATH : '/api/create-payment';
+      var apiUrl = base.replace(/\/$/, '') + path;
       var btn = document.getElementById('btn');
       var out = document.getElementById('resultado');
 
@@ -47,7 +49,19 @@
           })
         })
           .then(function (r) {
-            return r.json().then(function (data) {
+            return r.text().then(function (text) {
+              var data = null;
+              try {
+                data = text ? JSON.parse(text) : null;
+              } catch (e) {
+                if (r.status === 403) {
+                  return { status: 403, data: { error: 'Acesso negado (403). Se estiver usando o PHP: o servidor precisa executar PHP. A Vercel não executa PHP — use uma hospedagem com PHP ou corrija a rota Node na Vercel.' } };
+                }
+                if (r.status === 404) {
+                  return { status: 404, data: { error: 'Rota não encontrada (404). Confira se a pasta api/ está no deploy (Vercel) ou se o arquivo PHP está no servidor correto.' } };
+                }
+                return { status: r.status, data: { error: 'A API retornou uma página de erro em vez de JSON (ex.: 403 ou 404). Verifique a URL: ' + path } };
+              }
               return { status: r.status, data: data };
             });
           })
@@ -79,7 +93,11 @@
             btn.disabled = false;
           })
           .catch(function (err) {
-            out.innerHTML = '<p class="erro">Falha na requisição: ' + err.message + '</p><p>Confira se a API está no mesmo domínio e se CORS está ok.</p>';
+            var msg = err.message || 'Erro desconhecido';
+            if (msg.indexOf('not valid JSON') !== -1 || msg.indexOf('Unexpected token') !== -1) {
+              msg = 'A API retornou HTML ou texto em vez de JSON (geralmente 403 ou 404). Se usar PHP, o domínio precisa estar em um servidor que execute PHP (a Vercel não executa PHP).';
+            }
+            out.innerHTML = '<p class="erro">Falha na requisição: ' + msg + '</p><p>URL chamada: <code>' + apiUrl + '</code></p>';
             btn.disabled = false;
           });
       });

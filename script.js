@@ -257,7 +257,8 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
     var custom = String(window.API_BASE_URL).trim();
     if (custom) apiBase = custom;
   }
-  var paymentCreateUrl = apiBase.replace(/\/$/, '') + '/api/create-payment';
+  var paymentPath = (typeof window.PAYMENT_API_PATH !== 'undefined' && window.PAYMENT_API_PATH) ? window.PAYMENT_API_PATH : '/api/create-payment';
+  var paymentCreateUrl = apiBase.replace(/\/$/, '') + paymentPath;
 
   formSolicitar.addEventListener('submit', function (e) {
     e.preventDefault();

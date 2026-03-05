@@ -85,7 +85,7 @@ module.exports = async function handler(req, res) {
           tangible: false,
         },
       ],
-      metadata: JSON.stringify({ source: "site" }),
+      metadata: { source: "site" },
       pix: { expires_in_days: 1 },
     };
 
@@ -102,14 +102,16 @@ module.exports = async function handler(req, res) {
     const data = await fusionRes.json().catch(() => ({}));
 
     if (!fusionRes.ok) {
+      const errList = data?.errors || data?.error;
       const errMsg =
+        (Array.isArray(errList) && errList[0]) ||
         data?.message ||
         data?.error ||
-        (Array.isArray(data?.errors) && data.errors[0]?.message) ||
-        (typeof data?.errors === "object" && data.errors && Object.values(data.errors)[0]) ||
+        (data?.errors && typeof data.errors === "object" && data.errors.request && data.errors.request[0]) ||
+        (data?.errors && typeof data.errors === "object" && Object.values(data.errors).flat()[0]) ||
         "Erro ao criar pagamento. Verifique as credenciais e os dados enviados.";
       return res.status(fusionRes.status).json({
-        error: errMsg,
+        error: typeof errMsg === "string" ? errMsg : (data?.title || "Erro de validação"),
         details: data,
       });
     }
