@@ -22,3 +22,12 @@ O projeto é um **site estático** (HTML, CSS, JS) com **duas funções serverle
 Em **Settings** → **Domains**, adicione o domínio que você comprou (ex.: www.atestadomed.com.br). A Vercel orienta o que configurar no DNS.
 
 Depois de publicar, defina **`APP_URL`** com essa mesma URL (para o webhook da Fusion Pay).
+
+---
+
+## Se `/api/create-payment` retornar 404
+
+- Confirme que o **Root Directory** do projeto na Vercel está **vazio** (raiz do repositório).
+- O **vercel.json** não usa `builds` customizados: a Vercel detecta automaticamente a pasta **`api/`** e publica cada `.js` como função serverless.
+- Em **Deployments**, abra o último deploy e veja nos **Build Logs** se as funções em `api/` aparecem.
+- Faça um **Redeploy** (sem cache: "Redeploy without cache") após alterar o `vercel.json` ou a pasta `api/`.
