@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solicitar Atestado Médico | Atestado Médico Online</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Barra superior -->
+  <header class="top-bar">
+    <div class="container">
+      <span class="badge">100% Seguro e Confidencial</span>
+    </div>
+  </header>
+
+  <!-- Navegação / Abas -->
+  <nav class="main-nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">Atestado Médico Online</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="index.html#como-funciona">Como funciona</a></li>
+        <li><a href="index.html#diferenciais">Diferenciais</a></li>
+        <li><a href="index.html#depoimentos">Depoimentos</a></li>
+        <li><a href="index.html#parceiros" aria-label="Ir para a seção Parceiros">Parceiros</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+        <li><a href="consultar.html">Consultar</a></li>
+        <li><a href="solicitar.html" class="nav-cta">Solicitar Atestado</a></li>
+      </ul>
+      <button class="nav-toggle" type="button" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Conteúdo: formulário de solicitação -->
+  <main class="page-solicitar">
+    <div class="container">
+      <header class="solicitar-header">
+        <h1>Solicitar Atestado Médico</h1>
+        <p>Preencha o questionário abaixo. Em até 5 minutos você recebe seu atestado em PDF.</p>
+        <p class="solicitar-preco">A partir de <strong>R$ 39,90</strong> · Pagamento único</p>
+      </header>
+
+      <form class="form-solicitar" id="form-solicitar" action="#" method="post">
+        <div class="form-section">
+          <h2>Dados pessoais</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="nome">Nome completo *</label>
+              <input type="text" id="nome" name="nome" required placeholder="Seu nome completo" autocomplete="name" aria-describedby="nome-erro">
+              <span id="nome-erro" class="form-error" role="alert"></span>
+            </div>
+            <div class="form-group">
+              <label for="cpf">CPF *</label>
+              <input type="text" id="cpf" name="cpf" required placeholder="000.000.000-00" maxlength="14" autocomplete="off" aria-describedby="cpf-erro">
+              <span id="cpf-erro" class="form-error" role="alert"></span>
+            </div>
+            <div class="form-group">
+              <label for="email">E-mail *</label>
+              <input type="email" id="email" name="email" required placeholder="seu@email.com" autocomplete="email" aria-describedby="email-erro">
+              <span id="email-erro" class="form-error" role="alert"></span>
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone (WhatsApp) *</label>
+              <input type="tel" id="telefone" name="telefone" required placeholder="(00) 00000-0000" maxlength="15" autocomplete="tel" aria-describedby="telefone-erro">
+              <span id="telefone-erro" class="form-error" role="alert"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>Informações de saúde</h2>
+          <div class="form-group">
+            <label for="sintomas">Descreva brevemente seus sintomas ou motivo do afastamento *</label>
+            <textarea id="sintomas" name="sintomas" rows="4" required placeholder="Ex.: Dor de cabeça, febre e mal-estar desde ontem..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="dias">Quantos dias de afastamento você precisa? *</label>
+            <select id="dias" name="dias" required>
+              <option value="">Selecione</option>
+              <option value="1">1 dia</option>
+              <option value="2">2 dias</option>
+              <option value="3">3 dias</option>
+              <option value="4">4 dias</option>
+              <option value="5">5 dias</option>
+              <option value="6">6 dias</option>
+              <option value="7">7 dias</option>
+              <option value="mais">Mais de 7 dias (avaliação médica)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="data-inicio">Data de início do afastamento *</label>
+            <input type="text" id="data-inicio" name="data_inicio" required placeholder="DD/MM/AAAA" maxlength="10" autocomplete="off" aria-describedby="data-inicio-erro">
+            <span id="data-inicio-erro" class="form-error" role="alert"></span>
+          </div>
+        </div>
+
+        <!-- Resumo do Pedido (valor dinâmico por dias) -->
+        <div class="form-section form-resumo" id="resumo-pedido">
+          <h2>Resumo do Pedido</h2>
+          <p class="resumo-valor">Valor a pagar: <strong id="valor-a-pagar">R$ 39,90</strong></p>
+          <p class="resumo-obs">Valor atualizado de acordo com os dias de afastamento selecionados.</p>
+        </div>
+
+        <div class="form-section form-legal">
+          <p>Ao enviar, você declara que as informações são verdadeiras e aceita que um médico avalie seu caso para emissão do atestado, quando cabível. Seus dados são tratados de forma confidencial e segura.</p>
+        </div>
+
+        <input type="hidden" name="amount" id="amount" value="39.9">
+
+        <div class="form-actions">
+          <div id="solicitar-sucesso" class="solicitar-sucesso" hidden aria-live="polite">
+            <p><strong>Solicitação enviada!</strong> Seu lead foi registrado e aparecerá no painel administrativo.</p>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" id="btn-pagamento">Continuar para pagamento · R$ 39,90</button>
+          <a href="index.html" class="btn btn-secondary">Voltar ao início</a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© Atestado Médico Online. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="config-api.js"></script>
+  <script src="lib/validacao-dados-pessoais.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

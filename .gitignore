@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Next.js (dashboard)
+dashboard/.next/
+dashboard/out/
+
+# Env (não commitar chaves)
+.env
+.env.local
+.env.*.local
+
+# Dados locais (opcional; descomente se não quiser subir leads.json)
+# dashboard/data/
+
+# Logs e cache
+*.log
+npm-debug.log*
+.npm
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

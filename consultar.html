@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultar Atestados | Atestado Médico Online</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Barra superior -->
+  <header class="top-bar">
+    <div class="container">
+      <span class="badge">100% Seguro e Confidencial</span>
+    </div>
+  </header>
+
+  <!-- Navegação / Abas -->
+  <nav class="main-nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">Atestado Médico Online</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="index.html#como-funciona">Como funciona</a></li>
+        <li><a href="index.html#diferenciais">Diferenciais</a></li>
+        <li><a href="index.html#depoimentos">Depoimentos</a></li>
+        <li><a href="index.html#parceiros" aria-label="Ir para a seção Parceiros">Parceiros</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+        <li><a href="consultar.html">Consultar</a></li>
+        <li><a href="solicitar.html" class="nav-cta">Solicitar Atestado</a></li>
+      </ul>
+      <button class="nav-toggle" type="button" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Conteúdo: Consultar Atestados -->
+  <main class="page-consultar">
+    <div class="container">
+      <a href="index.html" class="consultar-back">← Voltar ao início</a>
+
+      <header class="consultar-header">
+        <div class="consultar-icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h1>Consultar Atestados</h1>
+        <p>Informe seu CPF para acessar e baixar seus documentos originais.</p>
+      </header>
+
+      <div class="consultar-card">
+        <form class="form-consultar" id="form-consultar" action="#" method="get">
+          <div class="form-group">
+            <label for="cpf-consultar">CPF cadastrado</label>
+            <input type="text" id="cpf-consultar" name="cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            <span class="btn-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </span>
+            Localizar Meus Atestados
+          </button>
+        </form>
+      </div>
+
+      <!-- Área para resultado (vazio por enquanto; API depois) -->
+      <div class="consultar-resultado" id="consultar-resultado" aria-live="polite" hidden>
+        <!-- Conteúdo injetado pela API no futuro -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal popup (sucesso ou erro de validação CPF) -->
+  <div class="consultar-modal-overlay" id="consultar-modal" role="dialog" aria-modal="true" aria-labelledby="consultar-modal-title" hidden>
+    <div class="consultar-modal-box">
+      <p class="consultar-modal-title" id="consultar-modal-title"></p>
+      <p class="consultar-modal-message" id="consultar-modal-message"></p>
+      <button type="button" class="btn btn-primary consultar-modal-btn" id="consultar-modal-close">OK</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© Atestado Médico Online. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="lib/validacao-dados-pessoais.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
