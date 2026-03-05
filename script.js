@@ -318,7 +318,13 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
           if (payRes.ok && payData) {
             var url = payData.pix && payData.pix.url ? payData.pix.url : (payData.checkout_url || payData.url);
             if (url) return { redirect: true, url: url };
-            if (payData.pix && (payData.pix.qr_code || payData.pix.e2_e)) return { showPix: true, pix: payData.pix };
+            var pix = payData.pix;
+            if (!pix && (payData.pixCode || payData.pixQrCode)) {
+              var code = payData.pixCode || payData.pixQrCode;
+              pix = { qr_code: payData.pixQrCode || code, e2_e: payData.pixCode || code };
+              if (payData.orderId) payData.transactionId = payData.orderId;
+            }
+            if (pix && (pix.qr_code || pix.e2_e)) return { showPix: true, pix: pix };
           }
           var msg = (payData && payData.error) ? payData.error : 'Pagamento não disponível. Configure na Vercel: FUSIONPAY_PUBLIC_KEY, FUSIONPAY_SECRET_KEY e APP_URL.';
           return { showPix: false, error: msg };
@@ -333,25 +339,71 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
           return;
         }
         if (result.showPix && result.pix) {
-          var pixBox = document.getElementById('pix-payment-box');
+          var backdrop = document.getElementById('pix-modal-backdrop');
           var qrImg = document.getElementById('pix-qr-image');
+          var qrCanvas = document.getElementById('pix-qr-canvas');
           var copyInput = document.getElementById('pix-copia-cola');
           var copyBtn = document.getElementById('pix-copy-btn');
           var btnPag = document.getElementById('btn-pagamento');
-          if (pixBox) {
-            if (result.pix.qr_code && qrImg) {
-              qrImg.src = result.pix.qr_code.indexOf('data:') === 0 ? result.pix.qr_code : result.pix.qr_code;
+          var qrVal = result.pix.qr_code;
+          var e2eVal = result.pix.e2_e;
+          var isImage = qrVal && (qrVal.indexOf('data:image') === 0 || qrVal.indexOf('http://') === 0 || qrVal.indexOf('https://') === 0);
+          var pixString = e2eVal || (!isImage && qrVal ? qrVal : null);
+          if (copyInput) copyInput.value = e2eVal || qrVal || '';
+          if (backdrop) {
+            if (isImage && qrImg) {
+              qrImg.src = qrVal;
               qrImg.removeAttribute('hidden');
-            } else if (qrImg) {
-              qrImg.style.display = 'none';
+              if (qrCanvas) { qrCanvas.innerHTML = ''; qrCanvas.style.display = 'none'; }
+            } else if (pixString && qrCanvas) {
+              qrCanvas.innerHTML = '';
+              qrCanvas.style.display = 'flex';
+              if (typeof QRCode !== 'undefined') {
+                try {
+                  new QRCode(qrCanvas, pixString);
+                } catch (e1) {
+                  try {
+                    new QRCode(qrCanvas, { text: pixString, width: 200, height: 200 });
+                  } catch (e2) {
+                    qrCanvas.style.display = 'none';
+                  }
+                }
+              } else {
+                qrCanvas.style.display = 'none';
+              }
+              if (qrImg) qrImg.setAttribute('hidden', '');
+            } else {
+              if (qrImg) qrImg.setAttribute('hidden', '');
+              if (qrCanvas) { qrCanvas.innerHTML = ''; qrCanvas.style.display = 'none'; }
             }
-            if (result.pix.e2_e && copyInput) {
-              copyInput.value = result.pix.e2_e;
-            }
-            pixBox.removeAttribute('hidden');
+            backdrop.removeAttribute('hidden');
+            backdrop.setAttribute('aria-hidden', 'false');
+            backdrop.style.display = 'flex';
             if (btnPag) btnPag.style.display = 'none';
-            pixBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.body.style.overflow = 'hidden';
           }
+          var closeModal = function () {
+            if (backdrop) {
+              backdrop.setAttribute('hidden', '');
+              backdrop.setAttribute('aria-hidden', 'true');
+            }
+            if (btnPag) btnPag.style.display = '';
+            document.body.style.overflow = '';
+          };
+          var closeBtn = document.getElementById('pix-modal-close');
+          if (closeBtn) closeBtn.onclick = closeModal;
+          if (backdrop) {
+            backdrop.onclick = function (e) {
+              if (e.target === backdrop) closeModal();
+            };
+          }
+          var escHandler = function (e) {
+            if (e.key === 'Escape' && backdrop && !backdrop.hasAttribute('hidden')) {
+              closeModal();
+              document.removeEventListener('keydown', escHandler);
+            }
+          };
+          document.addEventListener('keydown', escHandler);
           if (copyBtn && copyInput) {
             copyBtn.onclick = function () {
               var text = copyInput.value;

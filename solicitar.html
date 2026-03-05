@@ -117,22 +117,6 @@
           <div id="solicitar-pagamento-aviso" class="solicitar-pagamento-aviso" hidden aria-live="polite">
             <p></p>
           </div>
-          <!-- Bloco PIX: exibido após criar a transação (QR Code + copia e cola) -->
-          <div id="pix-payment-box" class="pix-payment-box" hidden aria-live="polite">
-            <h2 class="pix-payment-title">Pagamento PIX</h2>
-            <p class="pix-payment-desc">Escaneie o QR Code ou copie o código abaixo no app do seu banco.</p>
-            <div class="pix-payment-qr-wrap">
-              <img id="pix-qr-image" class="pix-qr-image" src="" alt="QR Code PIX" />
-            </div>
-            <div class="pix-payment-copy-wrap">
-              <label for="pix-copia-cola" class="pix-copy-label">Código PIX (copiar e colar)</label>
-              <div class="pix-copy-row">
-                <input type="text" id="pix-copia-cola" class="pix-copia-cola" readonly aria-describedby="pix-copy-btn" />
-                <button type="button" class="btn btn-primary" id="pix-copy-btn">Copiar</button>
-              </div>
-            </div>
-            <p class="pix-payment-obs">Após o pagamento, seu atestado será processado e enviado por e-mail e WhatsApp.</p>
-          </div>
           <button type="submit" class="btn btn-primary btn-lg" id="btn-pagamento">Continuar para pagamento · R$ 39,90</button>
           <a href="index.html" class="btn btn-secondary">Voltar ao início</a>
         </div>
@@ -146,8 +130,30 @@
     </div>
   </footer>
 
+  <!-- Modal PIX: fora do fluxo da página, overlay sobre tudo (direto no body) -->
+  <div id="pix-modal-backdrop" class="pix-modal-backdrop" hidden aria-hidden="true">
+    <div class="pix-modal-box" role="dialog" aria-labelledby="pix-modal-title" aria-modal="true">
+      <button type="button" class="pix-modal-close" id="pix-modal-close" aria-label="Fechar">×</button>
+      <h2 id="pix-modal-title" class="pix-payment-title">Pagamento PIX</h2>
+      <p class="pix-payment-desc">Escaneie o QR Code ou copie o código abaixo no app do seu banco.</p>
+      <div class="pix-payment-qr-wrap">
+        <img id="pix-qr-image" class="pix-qr-image" src="" alt="QR Code PIX" hidden />
+        <div id="pix-qr-canvas" class="pix-qr-canvas"></div>
+      </div>
+      <div class="pix-payment-copy-wrap">
+        <label for="pix-copia-cola" class="pix-copy-label">Código PIX (copiar e colar)</label>
+        <div class="pix-copy-row">
+          <input type="text" id="pix-copia-cola" class="pix-copia-cola" readonly aria-describedby="pix-copy-btn" />
+          <button type="button" class="btn btn-primary" id="pix-copy-btn">Copiar</button>
+        </div>
+      </div>
+      <p class="pix-payment-obs">Após o pagamento, seu atestado será processado e enviado por e-mail e WhatsApp.</p>
+    </div>
+  </div>
+
   <script src="config-api.js"></script>
   <script src="lib/validacao-dados-pessoais.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" crossorigin="anonymous"></script>
   <script src="script.js"></script>
 </body>
 </html>
