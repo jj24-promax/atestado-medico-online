@@ -1,0 +1,2 @@
+# PHP: usar só em hospedagem com PHP; na Vercel só rodam as funções .js
+api/**/*.php
