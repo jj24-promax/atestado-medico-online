@@ -55,7 +55,12 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
+    let body = {};
+    try {
+      body = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
+    } catch (_) {
+      return res.status(400).json({ error: "Body da requisição inválido (JSON esperado)." });
+    }
     const { amount, name, email, cpf, phone, itemTitle } = body;
     if (!amount || !name || !email) {
       return res.status(400).json({
@@ -99,7 +104,16 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify(payload),
     });
 
-    const data = await fusionRes.json().catch(() => ({}));
+    const text = await fusionRes.text();
+    let data = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch (_) {
+      return res.status(502).json({
+        error: "Resposta da Fusion Pay não é JSON. Verifique as credenciais e o status da API.",
+        _status: fusionRes.status,
+      });
+    }
 
     if (!fusionRes.ok) {
       const errList = data?.errors || data?.error;
@@ -129,21 +143,22 @@ module.exports = async function handler(req, res) {
 
     const pix = { qr_code: qrCode, url, e2_e: e2e };
     const allNull = !qrCode && !url && !e2e;
-    const body = {
+    const responseBody = {
       transactionId,
       pix,
       ...(allNull &&
         data && {
           _debug: {
-            dataKeys: data ? Object.keys(data) : [],
-            firstKeys: first && typeof first === "object" ? Object.keys(first) : [],
-            pixRawKeys: pixRaw && typeof pixRaw === "object" ? Object.keys(pixRaw) : [],
+            dataKeys: Object.keys(data || {}),
+            firstKeys: first && typeof first === "object" && first !== null ? Object.keys(first) : [],
+            pixRawKeys: pixRaw && typeof pixRaw === "object" && pixRaw !== null ? Object.keys(pixRaw) : [],
             raw: data,
           },
         }),
     };
-    return res.status(200).json(body);
+    return res.status(200).json(responseBody);
   } catch (e) {
-    return res.status(500).json({ error: "Erro ao criar transação de pagamento" });
+    const msg = e && e.message ? e.message : "Erro ao criar transação de pagamento";
+    return res.status(500).json({ error: msg });
   }
 }
