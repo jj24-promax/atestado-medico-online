@@ -252,8 +252,12 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
     return r.valido;
   }
 
-  // URL da API do dashboard (leads). Em produção, altere para a URL do seu dashboard.
-  var API_LEADS_URL = typeof window !== 'undefined' && window.API_LEADS_URL ? window.API_LEADS_URL : 'http://localhost:3000/api/leads';
+  var apiBase = window.location.origin;
+  if (window.location.hostname === 'localhost' && typeof window !== 'undefined' && window.API_BASE_URL) {
+    var custom = String(window.API_BASE_URL).trim();
+    if (custom) apiBase = custom;
+  }
+  var paymentCreateUrl = apiBase.replace(/\/$/, '') + '/api/create-payment';
 
   formSolicitar.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -278,15 +282,14 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
     var amountEl = document.getElementById('amount');
     var diasEl = document.getElementById('dias');
     var sintomasEl = document.getElementById('sintomas');
-    var payload = {
-      nome: nome ? nome.value.trim() : '',
-      cpf: cpf ? cpf.value : '',
+    var amountNum = parseFloat(amountEl ? amountEl.value : '39.9') || 39.9;
+    var paymentPayload = {
+      amount: amountNum,
+      name: nome ? nome.value.trim() : '',
       email: email ? email.value.trim() : '',
-      telefone: telefone ? telefone.value : '',
-      data_inicio: dataInicio ? dataInicio.value : '',
-      dias: diasEl ? diasEl.value : '',
-      sintomas: sintomasEl ? sintomasEl.value.trim() : '',
-      amount: amountEl ? amountEl.value : '39.9'
+      cpf: (cpf ? cpf.value : '').replace(/\D/g, ''),
+      phone: telefone ? telefone.value : '',
+      itemTitle: 'Atestado Médico'
     };
 
     var btn = formSolicitar.querySelector('button[type="submit"]');
@@ -294,28 +297,80 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
       btn.disabled = true;
       btn.textContent = 'Enviando...';
     }
-    fetch(API_LEADS_URL, {
+
+    fetch(paymentCreateUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(paymentPayload)
     })
-      .then(function (res) {
-        if (res.ok) return res.json();
-        throw new Error('Erro ao enviar');
+      .then(function (payRes) {
+        return payRes.json().then(function (payData) {
+          if (payRes.ok && payData) {
+            var url = payData.pix && payData.pix.url ? payData.pix.url : (payData.checkout_url || payData.url);
+            if (url) return { redirect: true, url: url };
+            if (payData.pix && (payData.pix.qr_code || payData.pix.e2_e)) return { showPix: true, pix: payData.pix };
+          }
+          throw new Error(payData && payData.error ? payData.error : 'Pagamento não disponível');
+        });
       })
-      .then(function () {
-        var msg = document.getElementById('solicitar-sucesso');
-        if (msg) {
-          msg.removeAttribute('hidden');
-          msg.setAttribute('aria-live', 'polite');
-          formSolicitar.reset();
-          if (typeof updatePrice === 'function') updatePrice();
-        } else {
-          alert('Solicitação enviada! Seu lead foi registrado no painel.');
+      .catch(function () {
+        return { showPix: false };
+      })
+      .then(function (result) {
+        if (result.redirect && result.url) {
+          window.location.href = result.url;
+          return;
+        }
+        if (result.showPix && result.pix) {
+          var pixBox = document.getElementById('pix-payment-box');
+          var qrImg = document.getElementById('pix-qr-image');
+          var copyInput = document.getElementById('pix-copia-cola');
+          var copyBtn = document.getElementById('pix-copy-btn');
+          var btnPag = document.getElementById('btn-pagamento');
+          if (pixBox) {
+            if (result.pix.qr_code && qrImg) {
+              qrImg.src = result.pix.qr_code.indexOf('data:') === 0 ? result.pix.qr_code : result.pix.qr_code;
+              qrImg.removeAttribute('hidden');
+            } else if (qrImg) {
+              qrImg.style.display = 'none';
+            }
+            if (result.pix.e2_e && copyInput) {
+              copyInput.value = result.pix.e2_e;
+            }
+            pixBox.removeAttribute('hidden');
+            if (btnPag) btnPag.style.display = 'none';
+            pixBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          if (copyBtn && copyInput) {
+            copyBtn.onclick = function () {
+              var text = copyInput.value;
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function () {
+                  copyBtn.textContent = 'Copiado!';
+                  setTimeout(function () { copyBtn.textContent = 'Copiar'; }, 2000);
+                });
+              } else {
+                copyInput.select();
+                try {
+                  document.execCommand('copy');
+                  copyBtn.textContent = 'Copiado!';
+                  setTimeout(function () { copyBtn.textContent = 'Copiar'; }, 2000);
+                } catch (e) {
+                  copyBtn.textContent = 'Copiar';
+                }
+              }
+            };
+          }
+          return;
+        }
+        var aviso = document.getElementById('solicitar-pagamento-aviso');
+        if (aviso) {
+          aviso.removeAttribute('hidden');
+          aviso.setAttribute('aria-live', 'polite');
         }
       })
       .catch(function () {
-        alert('Não foi possível enviar agora. Verifique se o dashboard está rodando em ' + API_LEADS_URL + ' ou tente novamente.');
+        alert('Não foi possível conectar ao pagamento. Verifique sua conexão ou tente novamente.');
       })
       .finally(function () {
         if (btn) {

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "serve .",
-    "start": "serve ."
+    "start": "serve .",
+    "auto-push": "node auto-push.js"
   },
   "devDependencies": {
     "serve": "^14.2.4"

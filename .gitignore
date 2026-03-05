@@ -1,9 +1,8 @@
 # Dependencies
 node_modules/
 
-# Next.js (dashboard)
-dashboard/.next/
-dashboard/out/
+# Dashboard removido — projeto usa só site + api/ (Fusion Pay)
+dashboard/
 
 # Env (não commitar chaves)
 .env
@@ -27,3 +26,4 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+.vercel

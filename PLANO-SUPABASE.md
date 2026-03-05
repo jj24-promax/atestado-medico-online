@@ -1,6 +1,6 @@
 # Plano: Vincular o projeto ao Supabase
 
-Este guia descreve os passos para conectar o **site de atestados** e o **dashboard** ao Supabase, substituindo o armazenamento em arquivo (`data/leads.json`) por um banco de dados real.
+> **Nota:** O projeto atual não usa mais dashboard; o site gera PIX direto via Fusion Pay. Este plano fica como referência caso você queira armazenar leads (ex.: em uma função serverless + Supabase) no futuro.
 
 ---
 
@@ -58,7 +58,8 @@ create table if not exists public.leads (
   sintomas text,
   dias text,
   data_inicio text,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  fusionpay_transaction_id text
 );
 
 -- Índice para listar por data (dashboard)

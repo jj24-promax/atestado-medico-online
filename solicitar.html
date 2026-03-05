@@ -114,8 +114,24 @@
         <input type="hidden" name="amount" id="amount" value="39.9">
 
         <div class="form-actions">
-          <div id="solicitar-sucesso" class="solicitar-sucesso" hidden aria-live="polite">
-            <p><strong>Solicitação enviada!</strong> Seu lead foi registrado e aparecerá no painel administrativo.</p>
+          <div id="solicitar-pagamento-aviso" class="solicitar-pagamento-aviso" hidden aria-live="polite">
+            <p>Não foi possível abrir a tela de pagamento no momento. Seu cadastro foi registrado; tente novamente em instantes.</p>
+          </div>
+          <!-- Bloco PIX: exibido após criar a transação (QR Code + copia e cola) -->
+          <div id="pix-payment-box" class="pix-payment-box" hidden aria-live="polite">
+            <h2 class="pix-payment-title">Pagamento PIX</h2>
+            <p class="pix-payment-desc">Escaneie o QR Code ou copie o código abaixo no app do seu banco.</p>
+            <div class="pix-payment-qr-wrap">
+              <img id="pix-qr-image" class="pix-qr-image" src="" alt="QR Code PIX" />
+            </div>
+            <div class="pix-payment-copy-wrap">
+              <label for="pix-copia-cola" class="pix-copy-label">Código PIX (copiar e colar)</label>
+              <div class="pix-copy-row">
+                <input type="text" id="pix-copia-cola" class="pix-copia-cola" readonly aria-describedby="pix-copy-btn" />
+                <button type="button" class="btn btn-primary" id="pix-copy-btn">Copiar</button>
+              </div>
+            </div>
+            <p class="pix-payment-obs">Após o pagamento, seu atestado será processado e enviado por e-mail e WhatsApp.</p>
           </div>
           <button type="submit" class="btn btn-primary btn-lg" id="btn-pagamento">Continuar para pagamento · R$ 39,90</button>
           <a href="index.html" class="btn btn-secondary">Voltar ao início</a>
