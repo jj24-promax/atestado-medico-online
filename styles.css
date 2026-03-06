@@ -515,9 +515,14 @@ img {
   padding-bottom: 1rem;
   margin: 0 -1rem 0.25rem -1rem;
   cursor: grab;
+  user-select: none;
 }
 
 .testimonials-scroll:active {
+  cursor: grabbing;
+}
+
+.testimonials-scroll.is-dragging {
   cursor: grabbing;
 }
 
@@ -547,7 +552,6 @@ img {
   gap: 1.25rem;
   width: max-content;
   padding: 0.5rem 1rem 0 1rem;
-  scroll-snap-type: x mandatory;
   touch-action: pan-x;
 }
 
@@ -566,6 +570,24 @@ img {
 
 .testimonial:hover {
   box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 767px) {
+  .testimonials-scroll {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .testimonials-track {
+    gap: 0.875rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .testimonial {
+    width: min(280px, 82vw);
+  }
 }
 
 @media (min-width: 480px) {

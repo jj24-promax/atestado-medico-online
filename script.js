@@ -104,54 +104,98 @@ if (formConsultar && typeof ValidacaoDadosPessoais !== 'undefined') {
   }
 }
 
-// Scroll infinito dos depoimentos (loop para a direita) + touch para arrastar
+// Scroll infinito dos depoimentos com autoplay, loop e suporte a drag/touch
 var testimonialsScroll = document.getElementById('testimonials-scroll');
 var testimonialsTrack = document.getElementById('testimonials-track');
 if (testimonialsScroll && testimonialsTrack) {
-  var trackWidth = testimonialsTrack.scrollWidth;
-  var halfWidth = trackWidth / 2;
+  var halfWidth = 0;
+  var autoScrollId = null;
+  var autoScrollSpeed = window.innerWidth < 768 ? 0.35 : 0.5;
+  var isPaused = false;
+  var isDragging = false;
+  var startX = 0;
+  var startScrollLeft = 0;
+  var resumeTimer = null;
 
-  testimonialsScroll.addEventListener('scroll', function () {
-    if (this.scrollLeft >= halfWidth - 10) {
-      this.scrollLeft = this.scrollLeft - halfWidth;
+  function refreshTestimonialsMetrics() {
+    halfWidth = testimonialsTrack.scrollWidth / 2;
+    autoScrollSpeed = window.innerWidth < 768 ? 0.35 : 0.5;
+    if (halfWidth > 0 && testimonialsScroll.scrollLeft <= 0) {
+      testimonialsScroll.scrollLeft = 1;
     }
-  });
+  }
 
-  window.addEventListener('resize', function () {
-    trackWidth = testimonialsTrack.scrollWidth;
-    halfWidth = trackWidth / 2;
-  });
-
-  // Touch: priorizar arraste horizontal para não rolar a página ao deslizar os cards
-  var touchStartX = 0;
-  var touchStartY = 0;
-  var dragLockHorizontal = null;
-
-  testimonialsScroll.addEventListener('touchstart', function (e) {
-    if (e.touches.length === 1) {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      dragLockHorizontal = null;
+  function normalizeTestimonialsLoop() {
+    if (!halfWidth) return;
+    if (testimonialsScroll.scrollLeft >= halfWidth) {
+      testimonialsScroll.scrollLeft -= halfWidth;
+    } else if (testimonialsScroll.scrollLeft <= 0) {
+      testimonialsScroll.scrollLeft += halfWidth;
     }
+  }
+
+  function pauseTestimonials(ms) {
+    isPaused = true;
+    if (resumeTimer) clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(function () {
+      isPaused = false;
+    }, ms || 1600);
+  }
+
+  function autoplayTestimonials() {
+    if (!isPaused && !isDragging && halfWidth) {
+      testimonialsScroll.scrollLeft += autoScrollSpeed;
+      normalizeTestimonialsLoop();
+    }
+    autoScrollId = window.requestAnimationFrame(autoplayTestimonials);
+  }
+
+  refreshTestimonialsMetrics();
+  testimonialsScroll.addEventListener('scroll', normalizeTestimonialsLoop, { passive: true });
+  window.addEventListener('resize', refreshTestimonialsMetrics);
+
+  testimonialsScroll.addEventListener('mouseenter', function () {
+    isPaused = true;
+  });
+  testimonialsScroll.addEventListener('mouseleave', function () {
+    isPaused = false;
+  });
+  testimonialsScroll.addEventListener('wheel', function () {
+    pauseTestimonials(1800);
   }, { passive: true });
-
-  testimonialsScroll.addEventListener('touchmove', function (e) {
-    if (e.touches.length !== 1) return;
-    var dx = e.touches[0].clientX - touchStartX;
-    var dy = e.touches[0].clientY - touchStartY;
-    if (dragLockHorizontal === null) {
-      var absX = Math.abs(dx);
-      var absY = Math.abs(dy);
-      if (absX > 5 || absY > 5) dragLockHorizontal = absX > absY;
-    }
-    if (dragLockHorizontal === true) {
-      e.preventDefault();
-    }
-  }, { passive: false });
-
+  testimonialsScroll.addEventListener('touchstart', function () {
+    pauseTestimonials(2500);
+  }, { passive: true });
   testimonialsScroll.addEventListener('touchend', function () {
-    dragLockHorizontal = null;
+    pauseTestimonials(1800);
   }, { passive: true });
+
+  testimonialsScroll.addEventListener('pointerdown', function (e) {
+    isDragging = true;
+    isPaused = true;
+    startX = e.clientX;
+    startScrollLeft = testimonialsScroll.scrollLeft;
+    testimonialsScroll.classList.add('is-dragging');
+  });
+
+  window.addEventListener('pointermove', function (e) {
+    if (!isDragging) return;
+    var deltaX = e.clientX - startX;
+    testimonialsScroll.scrollLeft = startScrollLeft - deltaX;
+    normalizeTestimonialsLoop();
+  });
+
+  function stopDraggingTestimonials() {
+    if (!isDragging) return;
+    isDragging = false;
+    testimonialsScroll.classList.remove('is-dragging');
+    pauseTestimonials(1800);
+  }
+
+  window.addEventListener('pointerup', stopDraggingTestimonials);
+  window.addEventListener('pointercancel', stopDraggingTestimonials);
+
+  autoScrollId = window.requestAnimationFrame(autoplayTestimonials);
 }
 
 // Precificação dinâmica na página Solicitar (por dias de afastamento)
@@ -161,14 +205,14 @@ var btnPagamento = document.getElementById('btn-pagamento');
 var amountInput = document.getElementById('amount');
 
 var PRICE_BY_DAYS = {
-  '1': 39.9,
-  '2': 49.9,
-  '3': 59.9,
-  '4': 69.9,
-  '5': 79.9,
-  '6': 89.9,
-  '7': 99.9,
-  'mais': 129.9
+  '1': 27.9,
+  '2': 37.9,
+  '3': 47.9,
+  '4': 57.9,
+  '5': 67.9,
+  '6': 77.9,
+  '7': 87.9,
+  'mais': 117.9
 };
 
 function formatPrice(value) {
@@ -178,7 +222,7 @@ function formatPrice(value) {
 function updatePrice() {
   if (!diasSelect || !valorAPagarEl || !btnPagamento || !amountInput) return;
   var value = diasSelect.value;
-  var price = value && PRICE_BY_DAYS[value] !== undefined ? PRICE_BY_DAYS[value] : 39.9;
+  var price = value && PRICE_BY_DAYS[value] !== undefined ? PRICE_BY_DAYS[value] : 27.9;
   var text = formatPrice(price);
   valorAPagarEl.textContent = text;
   btnPagamento.textContent = 'Continuar para pagamento · ' + text;
@@ -283,7 +327,7 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
     var amountEl = document.getElementById('amount');
     var diasEl = document.getElementById('dias');
     var sintomasEl = document.getElementById('sintomas');
-    var amountNum = parseFloat(amountEl ? amountEl.value : '39.9') || 39.9;
+    var amountNum = parseFloat(amountEl ? amountEl.value : '27.9') || 27.9;
     var paymentPayload = {
       amount: amountNum,
       name: nome ? nome.value.trim() : '',
@@ -451,10 +495,10 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
         if (btn) {
           btn.disabled = false;
           if (typeof formatPrice === 'function' && amountEl) {
-            var p = parseFloat(amountEl.value) || 39.9;
+            var p = parseFloat(amountEl.value) || 27.9;
             btn.textContent = 'Continuar para pagamento · ' + formatPrice(p);
           } else {
-            btn.textContent = 'Continuar para pagamento · R$ 39,90';
+            btn.textContent = 'Continuar para pagamento · R$ 27,90';
           }
         }
       });
