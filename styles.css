@@ -1613,3 +1613,181 @@ img {
     padding: 3rem 0;
   }
 }
+
+/* --- Prévia do Atestado (checkout) --- */
+.previa-atestado-wrap {
+  margin-top: 1.5rem;
+}
+
+.previa-atestado-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.previa-atestado-icon {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+.previa-atestado-title {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.previa-atestado-card {
+  background: #FCFBF7;
+  border: 1px solid #e5e7eb;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.previa-atestado-card::before {
+  content: "ATESTADO MÉDICO";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #1e293b;
+  opacity: 0.05;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.previa-atestado-card-inner {
+  position: relative;
+  z-index: 1;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.previa-atestado-doc-title {
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #1e293b;
+  margin: 0 0 1.5rem 0;
+}
+
+.previa-atestado-body {
+  text-align: left;
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #1e293b;
+}
+
+.previa-atestado-body p {
+  margin-bottom: 1rem;
+}
+
+.previa-atestado-body p:last-of-type {
+  margin-bottom: 0;
+}
+
+.preview-dynamic {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.previa-atestado-data-line {
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+}
+
+.previa-atestado-auth {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 0;
+}
+
+.previa-atestado-auth-img {
+  max-width: 140px;
+  width: auto;
+  height: auto;
+  max-height: 72px;
+  object-fit: contain;
+  opacity: 0.52;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  mix-blend-mode: multiply;
+}
+
+.previa-atestado-signature {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  text-align: center;
+}
+
+.previa-atestado-hr-dashed {
+  border: none;
+  border-top: 1px dashed #9ca3af;
+  margin: 0 0 2rem 0;
+}
+
+.previa-atestado-signature-line {
+  width: 250px;
+  border-bottom: 1px solid #000;
+  margin: 0 auto 0.5rem auto;
+}
+
+.previa-atestado-signature-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.25rem 0;
+}
+
+.previa-atestado-signature-crm {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.previa-atestado-legal-footer {
+  margin-top: 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+  text-align: center;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.previa-atestado-alert {
+  margin-top: 1.25rem;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.previa-atestado-alert span {
+  margin-right: 0.35rem;
+}
+
+@media (max-width: 479px) {
+  .previa-atestado-card {
+    padding: 1.25rem;
+  }
+}

@@ -234,6 +234,63 @@ if (diasSelect) {
   updatePrice();
 }
 
+// ---- Prévia do Atestado (atualização em tempo real a partir do formulário) ----
+function numeroPorExtenso(numero) {
+  var n = String(numero).trim();
+  var porExtenso = { '1': 'um', '2': 'dois', '3': 'três', '4': 'quatro', '5': 'cinco', '6': 'seis', '7': 'sete' };
+  if (porExtenso[n]) return n + ' (' + porExtenso[n] + ')';
+  return n ? n + ' (' + n + ')' : null;
+}
+
+function updateAtestadoPreview() {
+  var nomeEl = document.getElementById('nome');
+  var cpfEl = document.getElementById('cpf');
+  var diasEl = document.getElementById('dias');
+  var dataInicioEl = document.getElementById('data-inicio');
+  var previewNome = document.getElementById('preview-nome');
+  var previewCpf = document.getElementById('preview-cpf');
+  var previewHora = document.getElementById('preview-hora');
+  var previewDias = document.getElementById('preview-dias');
+  var previewDataLocal = document.getElementById('preview-data-local');
+
+  if (!previewNome || !previewCpf || !previewHora || !previewDias || !previewDataLocal) return;
+
+  previewNome.textContent = (nomeEl && nomeEl.value.trim()) ? nomeEl.value.trim() : 'NOME DO PACIENTE';
+  previewCpf.textContent = (cpfEl && cpfEl.value) ? cpfEl.value : '000.000.000-00';
+
+  var now = new Date();
+  var h = now.getHours();
+  var m = now.getMinutes();
+  previewHora.textContent = (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+
+  if (diasEl && diasEl.value) {
+    var val = diasEl.value;
+    if (val === 'mais') {
+      previewDias.textContent = 'a critério médico';
+    } else {
+      var formatado = numeroPorExtenso(val);
+      previewDias.textContent = formatado || val;
+    }
+  } else {
+    previewDias.textContent = 'X (um)';
+  }
+
+  var dataStr = (dataInicioEl && dataInicioEl.value) ? dataInicioEl.value.trim() : '';
+  previewDataLocal.textContent = dataStr ? 'São Paulo, ' + dataStr : 'São Paulo, DD/MM/AAAA';
+}
+
+var formSolicitarForPreview = document.getElementById('form-solicitar');
+if (formSolicitarForPreview) {
+  ['nome', 'cpf', 'dias', 'data-inicio'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', updateAtestadoPreview);
+      el.addEventListener('change', updateAtestadoPreview);
+    }
+  });
+  updateAtestadoPreview();
+}
+
 // Links âncora suave (inclui #parceiros e demais âncoras; mesmo quando href é index.html#parceiros)
 function setupSmoothAnchor(anchor) {
   anchor.addEventListener('click', function (e) {

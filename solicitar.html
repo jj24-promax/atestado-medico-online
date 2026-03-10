@@ -110,6 +110,44 @@
           <p class="resumo-obs">Valor atualizado de acordo com os dias de afastamento selecionados.</p>
         </div>
 
+        <!-- Prévia do Atestado (checkout) -->
+        <div class="form-section previa-atestado-wrap" id="previa-atestado-wrap">
+          <div class="previa-atestado-header">
+            <svg class="previa-atestado-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <h2 class="previa-atestado-title">Prévia do seu Atestado</h2>
+          </div>
+          <div class="previa-atestado-card">
+            <div class="previa-atestado-card-inner">
+              <h3 class="previa-atestado-doc-title">ATESTADO MÉDICO</h3>
+              <div class="previa-atestado-body">
+                <p style="text-align: justify; line-height: 1.6;">
+                  Atesto, para os devidos fins, que <span id="preview-nome" class="preview-dynamic">NOME DO PACIENTE</span>, portador(a) do CPF: <span id="preview-cpf" class="preview-dynamic">000.000.000-00</span>, foi submetido(a) à consulta médica via <strong>Telemedicina</strong> nesta data, com início às <span id="preview-hora" class="preview-dynamic">00:00</span> horas.
+                </p>
+                <p style="text-align: justify; line-height: 1.6; margin-top: 15px;">
+                  Em decorrência da avaliação clínica, deverá permanecer em repouso e afastado(a) de suas atividades laborativas por um período de <span id="preview-dias" class="preview-dynamic">X</span> dia(s), a partir desta data.
+                </p>
+                <p class="previa-atestado-data-line"><strong><span id="preview-data-local" class="preview-dynamic">São Paulo, DD/MM/AAAA</span></strong></p>
+              </div>
+              <div class="previa-atestado-auth" aria-hidden="true">
+                <img src="assets/autenticacao-digital-telemed.png" alt="" class="previa-atestado-auth-img" width="140" height="80">
+              </div>
+              <div class="previa-atestado-signature">
+                <hr class="previa-atestado-hr-dashed">
+                <div class="previa-atestado-signature-line"></div>
+                <p class="previa-atestado-signature-label">Assinatura e Carimbo do Médico</p>
+                <p class="previa-atestado-signature-crm">CRM/UF - Registro Profissional</p>
+                <p class="previa-atestado-legal-footer">Documento válido em todo o território nacional, nos termos da Lei nº 13.787/2018 e da Resolução CFM nº 2.314/2022 (telemedicina).</p>
+              </div>
+            </div>
+          </div>
+          <p class="previa-atestado-alert" role="status">
+            <span aria-hidden="true">⚠️</span> Esta é apenas uma prévia ilustrativa. O documento oficial com assinatura digital será enviado após confirmação do pagamento.
+          </p>
+        </div>
+
         <div class="form-section form-legal">
           <p>Ao enviar, você declara que as informações são verdadeiras e aceita que um médico avalie seu caso para emissão do atestado, quando cabível. Seus dados são tratados de forma confidencial e segura.</p>
         </div>
