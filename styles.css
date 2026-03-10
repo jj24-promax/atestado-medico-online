@@ -1246,6 +1246,13 @@ img {
   min-height: 1.25rem;
 }
 
+.form-field-hint {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-top: 0.35rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
 
 .form-resumo {
   background: #f0fdfa;
