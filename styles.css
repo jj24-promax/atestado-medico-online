@@ -1802,8 +1802,14 @@ img {
 
 .doc-atestado-crm {
   font-size: 0.8rem;
+  font-weight: 700;
   color: #475569;
   margin: 0 0 0.15rem 0;
+  text-align: center;
+  letter-spacing: 0.03em;
+  font-variant-numeric: lining-nums;
+  line-height: 1.2;
+  vertical-align: baseline;
 }
 
 .doc-atestado-medico-label {
