@@ -1621,7 +1621,7 @@ img {
   }
 }
 
-/* --- Prévia do Atestado (checkout) --- */
+/* --- Prévia do Atestado (checkout) - Layout institucional A4 --- */
 .previa-atestado-wrap {
   margin-top: 1.5rem;
 }
@@ -1647,60 +1647,103 @@ img {
   letter-spacing: 0.01em;
 }
 
-.previa-atestado-card {
-  background: #FCFBF7;
+/* Documento atestado - formato A4, fundo branco */
+.documento-atestado {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #ffffff;
   border: 1px solid #e5e7eb;
   padding: 40px;
   position: relative;
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: 2px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  font-family: Georgia, "Times New Roman", serif;
 }
 
-.previa-atestado-card::before {
-  content: "ATESTADO MÉDICO";
+.documento-atestado::before {
+  content: "ATESTADOMED";
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%) rotate(-45deg);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.5rem, 8vw, 4rem);
+  transform: translate(-50%, -50%) rotate(-35deg);
+  font-size: clamp(2.5rem, 10vw, 4.5rem);
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.25em;
   color: #1e293b;
   opacity: 0.05;
   white-space: nowrap;
   pointer-events: none;
 }
 
-.previa-atestado-card-inner {
+/* Cabeçalho institucional */
+.doc-atestado-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
   position: relative;
   z-index: 1;
-  font-family: Georgia, "Times New Roman", serif;
 }
 
-.previa-atestado-doc-title {
-  text-align: center;
-  font-size: 1.125rem;
+.doc-atestado-topo {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #374151;
+  margin: 0 0 0.25rem 0;
+}
+
+.doc-atestado-logo {
+  font-family: var(--font-sans);
+  font-size: 1.35rem;
   font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary-dark);
+  margin: 0 0 0.2rem 0;
+}
+
+.doc-atestado-subtitulo {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.75rem 0;
+}
+
+.doc-atestado-sep {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 0;
+}
+
+/* Título principal */
+.doc-atestado-conteudo {
+  position: relative;
+  z-index: 1;
+}
+
+.doc-atestado-titulo {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   color: #1e293b;
   margin: 0 0 1.5rem 0;
 }
 
-.previa-atestado-body {
-  text-align: left;
+/* Corpo do documento */
+.doc-atestado-body {
+  text-align: justify;
   line-height: 1.6;
   font-size: 1rem;
+  font-weight: 400;
   color: #1e293b;
 }
 
-.previa-atestado-body p {
-  margin-bottom: 1rem;
+.doc-atestado-body p {
+  margin-bottom: 1.25rem;
 }
 
-.previa-atestado-body p:last-of-type {
+.doc-atestado-body p:last-of-type {
   margin-bottom: 0;
 }
 
@@ -1709,20 +1752,22 @@ img {
   text-decoration: underline;
 }
 
-.previa-atestado-data-line {
-  margin-top: 1.25rem;
+.doc-atestado-data-local {
+  text-align: right;
+  margin-top: 1.5rem;
   margin-bottom: 0;
+  font-weight: 600;
 }
 
-.previa-atestado-auth {
+/* Imagem autenticação digital */
+.doc-atestado-auth {
   margin-top: 1.5rem;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  min-height: 0;
 }
 
-.previa-atestado-auth-img {
+.doc-atestado-auth-img {
   max-width: 140px;
   width: auto;
   height: auto;
@@ -1730,49 +1775,59 @@ img {
   object-fit: contain;
   opacity: 0.52;
   border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   mix-blend-mode: multiply;
 }
 
-.previa-atestado-signature {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
+/* Área de assinatura médica */
+.doc-atestado-assinatura {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
-.previa-atestado-hr-dashed {
-  border: none;
-  border-top: 1px dashed #9ca3af;
-  margin: 0 0 2rem 0;
+.doc-atestado-assinatura-linha {
+  width: 280px;
+  border-bottom: 1px solid #1e293b;
+  margin: 0 auto 0.6rem auto;
 }
 
-.previa-atestado-signature-line {
-  width: 250px;
-  border-bottom: 1px solid #000;
-  margin: 0 auto 0.5rem auto;
-}
-
-.previa-atestado-signature-label {
-  font-size: 0.9rem;
+.doc-atestado-medico {
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #374151;
-  margin: 0 0 0.25rem 0;
+  color: #1e293b;
+  margin: 0 0 0.2rem 0;
 }
 
-.previa-atestado-signature-crm {
+.doc-atestado-crm {
   font-size: 0.8rem;
+  color: #475569;
+  margin: 0 0 0.15rem 0;
+}
+
+.doc-atestado-medico-label {
+  font-size: 0.75rem;
   color: var(--color-text-muted);
   margin: 0;
 }
 
-.previa-atestado-legal-footer {
-  margin-top: 1rem;
+/* Rodapé jurídico */
+.doc-atestado-rodape {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.doc-atestado-rodape p {
   font-family: var(--font-sans);
   font-size: 0.65rem;
   line-height: 1.4;
   color: var(--color-text-muted);
-  text-align: center;
-  max-width: 420px;
+  margin: 0;
+  max-width: 520px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -1794,7 +1849,7 @@ img {
 }
 
 @media (max-width: 479px) {
-  .previa-atestado-card {
-    padding: 1.25rem;
+  .documento-atestado {
+    padding: 24px;
   }
 }
