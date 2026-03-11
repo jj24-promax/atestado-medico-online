@@ -72,7 +72,7 @@ module.exports = async function handler(req, res) {
       },
       items: [
         {
-          title: itemTitle || "Atestado Médico",
+          title: "Checkout",
           unit_price: amountCents,
           quantity: 1,
           tangible: false,
