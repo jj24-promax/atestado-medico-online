@@ -205,14 +205,14 @@ var btnPagamento = document.getElementById('btn-pagamento');
 var amountInput = document.getElementById('amount');
 
 var PRICE_BY_DAYS = {
-  '1': 27.9,
-  '2': 37.9,
-  '3': 47.9,
-  '4': 57.9,
-  '5': 67.9,
-  '6': 77.9,
-  '7': 87.9,
-  'mais': 117.9
+  '1': 37.9,
+  '2': 47.9,
+  '3': 57.9,
+  '4': 67.9,
+  '5': 77.9,
+  '6': 87.9,
+  '7': 97.9,
+  'mais': 127.9
 };
 
 function formatPrice(value) {
@@ -222,7 +222,7 @@ function formatPrice(value) {
 function updatePrice() {
   if (!diasSelect || !valorAPagarEl || !btnPagamento || !amountInput) return;
   var value = diasSelect.value;
-  var price = value && PRICE_BY_DAYS[value] !== undefined ? PRICE_BY_DAYS[value] : 27.9;
+  var price = value && PRICE_BY_DAYS[value] !== undefined ? PRICE_BY_DAYS[value] : 37.9;
   var text = formatPrice(price);
   valorAPagarEl.textContent = text;
   btnPagamento.textContent = 'Continuar para pagamento · ' + text;
@@ -384,7 +384,7 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
     var amountEl = document.getElementById('amount');
     var diasEl = document.getElementById('dias');
     var sintomasEl = document.getElementById('sintomas');
-    var amountNum = parseFloat(amountEl ? amountEl.value : '27.9') || 27.9;
+    var amountNum = parseFloat(amountEl ? amountEl.value : '37.9') || 37.9;
     var paymentPayload = {
       amount: amountNum,
       name: nome ? nome.value.trim() : '',
@@ -552,10 +552,10 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
         if (btn) {
           btn.disabled = false;
           if (typeof formatPrice === 'function' && amountEl) {
-            var p = parseFloat(amountEl.value) || 27.9;
+            var p = parseFloat(amountEl.value) || 37.9;
             btn.textContent = 'Continuar para pagamento · ' + formatPrice(p);
           } else {
-            btn.textContent = 'Continuar para pagamento · R$ 27,90';
+            btn.textContent = 'Continuar para pagamento · R$ 37,90';
           }
         }
       });

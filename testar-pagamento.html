@@ -23,7 +23,7 @@
   <h1>Testar geração de QR code PIX</h1>
   <p>Esta página chama a API de pagamento e exibe o resultado (redirect, QR ou erro).</p>
   <p>Use no mesmo domínio do site (ex.: <code>https://www.atestadomed.com.br/testar-pagamento.html</code>).</p>
-  <button type="button" id="btn">Gerar pagamento de teste (R$ 27,90)</button>
+  <button type="button" id="btn">Gerar pagamento de teste (R$ 37,90)</button>
   <div id="resultado"></div>
 
   <script src="config-api.js"></script>
@@ -43,7 +43,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            amount: 27.90,
+            amount: 37.90,
             name: 'Teste QR',
             email: 'teste@teste.com',
             cpf: '52998224725',
