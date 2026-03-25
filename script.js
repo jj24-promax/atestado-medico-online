@@ -466,11 +466,13 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
                   try {
                     new QRCode(qrCanvas, { text: pixString, width: 200, height: 200 });
                   } catch (e2) {
-                    qrCanvas.style.display = 'none';
+                    qrCanvas.innerHTML = '<p class="pix-qr-fallback">Não foi possível gerar o QR Code. Use o código abaixo (copiar e colar).</p>';
+                    qrCanvas.style.display = 'flex';
                   }
                 }
               } else {
-                qrCanvas.style.display = 'none';
+                qrCanvas.innerHTML = '<p class="pix-qr-fallback">Carregue a página novamente ou use o código PIX abaixo.</p>';
+                qrCanvas.style.display = 'flex';
               }
               if (qrImg) qrImg.setAttribute('hidden', '');
             } else {

@@ -1461,6 +1461,15 @@ img {
 }
 .pix-qr-canvas table { border-collapse: collapse; display: block; margin-left: auto; margin-right: auto; }
 
+.pix-qr-fallback {
+  margin: 0;
+  max-width: 18rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted, #64748b);
+  text-align: center;
+  line-height: 1.4;
+}
+
 .pix-payment-copy-wrap {
   margin-bottom: 1rem;
 }
