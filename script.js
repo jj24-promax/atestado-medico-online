@@ -460,11 +460,21 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
               qrCanvas.innerHTML = '';
               qrCanvas.style.display = 'flex';
               if (typeof QRCode !== 'undefined') {
+                // PIX "copia e cola" é longo; correção H (padrão do qrcodejs) estoura capacidade e lança erro.
+                var qrOpts = {
+                  text: pixString,
+                  width: 220,
+                  height: 220,
+                  correctLevel: QRCode.CorrectLevel.L
+                };
                 try {
-                  new QRCode(qrCanvas, pixString);
+                  new QRCode(qrCanvas, qrOpts);
                 } catch (e1) {
+                  qrCanvas.innerHTML = '';
                   try {
-                    new QRCode(qrCanvas, { text: pixString, width: 200, height: 200 });
+                    qrOpts.width = 256;
+                    qrOpts.height = 256;
+                    new QRCode(qrCanvas, qrOpts);
                   } catch (e2) {
                     qrCanvas.innerHTML = '<p class="pix-qr-fallback">Não foi possível gerar o QR Code. Use o código abaixo (copiar e colar).</p>';
                     qrCanvas.style.display = 'flex';
