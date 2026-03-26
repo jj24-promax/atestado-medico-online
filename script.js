@@ -627,3 +627,100 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
     widget.classList.add('is-visible');
   }, 3000);
 })();
+
+// ---- Social proof popup (notificacoes simuladas) ----
+(function () {
+  // Evita exibir na pagina de consulta para nao conflitar com o fluxo de status.
+  if (document.body && document.body.classList.contains('page-consultar')) return;
+
+  var names = [
+    'Joao', 'Maria', 'Lucas', 'Ana', 'Pedro', 'Juliana', 'Rafael', 'Camila',
+    'Bruno', 'Larissa', 'Gustavo', 'Beatriz', 'Thiago', 'Fernanda', 'Matheus',
+    'Amanda', 'Felipe', 'Patricia', 'Diego', 'Carolina', 'Vinicius', 'Natalia'
+  ];
+
+  var cities = [
+    'SP', 'RJ', 'MG', 'BA', 'PR', 'RS', 'SC', 'GO', 'PE', 'CE',
+    'DF', 'ES', 'PA', 'AM', 'MT', 'MS', 'AL'
+  ];
+
+  var times = [
+    'agora mesmo', 'ha 1 minuto', 'ha 2 minutos', 'ha 3 minutos',
+    'ha 4 minutos', 'ha 5 minutos', 'ha 6 minutos'
+  ];
+
+  var templates = [
+    '{name} - {city} acabou de solicitar um atestado',
+    '{name} - {city} recebeu seu atestado',
+    '{name} - {city} finalizou o pedido {time}',
+    '{name} - {city} concluiu a solicitacao {time}',
+    '{name} - {city} gerou o atestado com sucesso'
+  ];
+
+  var lastName = '';
+  var lastCity = '';
+  var showing = false;
+
+  function randomItem(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function nonRepeated(arr, previous) {
+    if (arr.length <= 1) return arr[0];
+    var next = randomItem(arr);
+    while (next === previous) next = randomItem(arr);
+    return next;
+  }
+
+  function buildMessage() {
+    var n = nonRepeated(names, lastName);
+    var c = nonRepeated(cities, lastCity);
+    var t = randomItem(times);
+    var base = randomItem(templates);
+    lastName = n;
+    lastCity = c;
+    return base.replace('{name}', n).replace('{city}', c).replace('{time}', t);
+  }
+
+  var popup = document.createElement('aside');
+  popup.className = 'social-proof-popup';
+  popup.setAttribute('aria-live', 'polite');
+  popup.setAttribute('aria-atomic', 'true');
+  popup.innerHTML = (
+    '<div class="social-proof-popup__icon" aria-hidden="true">' +
+      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M20 6L9 17l-5-5"></path>' +
+      '</svg>' +
+    '</div>' +
+    '<div class="social-proof-popup__content">' +
+      '<p class="social-proof-popup__text"></p>' +
+      '<p class="social-proof-popup__sub">Atendimento 24h</p>' +
+    '</div>'
+  );
+  document.body.appendChild(popup);
+
+  var textEl = popup.querySelector('.social-proof-popup__text');
+
+  function showPopup() {
+    if (showing || !textEl) return;
+    showing = true;
+    textEl.textContent = buildMessage();
+    popup.classList.add('is-visible');
+
+    window.setTimeout(function () {
+      popup.classList.remove('is-visible');
+      showing = false;
+    }, 4000);
+  }
+
+  function schedule() {
+    var delay = 5000 + Math.floor(Math.random() * 5000); // 5-10s
+    window.setTimeout(function () {
+      showPopup();
+      schedule();
+    }, delay);
+  }
+
+  window.setTimeout(showPopup, 1400);
+  schedule();
+})();
