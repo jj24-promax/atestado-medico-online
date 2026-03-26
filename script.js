@@ -632,6 +632,8 @@ if (formSolicitar && typeof ValidacaoDadosPessoais !== 'undefined') {
 (function () {
   // Evita exibir na pagina de consulta para nao conflitar com o fluxo de status.
   if (document.body && document.body.classList.contains('page-consultar')) return;
+  // Evita exibir na tela de solicitacao/pagamento.
+  if (document.getElementById('form-solicitar') || document.getElementById('pix-modal-backdrop')) return;
 
   var names = [
     'Joao', 'Maria', 'Lucas', 'Ana', 'Pedro', 'Juliana', 'Rafael', 'Camila',
