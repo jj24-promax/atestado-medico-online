@@ -1671,7 +1671,7 @@ img {
 }
 
 .documento-atestado::before {
-  content: "ATESTADOMED";
+  content: "UNIMED";
   position: absolute;
   left: 50%;
   top: 50%;
@@ -1709,6 +1709,13 @@ img {
   letter-spacing: 0.08em;
   color: var(--color-primary-dark);
   margin: 0 0 0.2rem 0;
+}
+
+.doc-atestado-logo-img {
+  width: clamp(150px, 40vw, 230px);
+  height: auto;
+  margin: 0 auto 0.2rem;
+  display: block;
 }
 
 .doc-atestado-subtitulo {
